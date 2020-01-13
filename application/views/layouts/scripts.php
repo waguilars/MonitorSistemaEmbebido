@@ -21,4 +21,15 @@
 
     <!-- Custom Theme Scripts -->
     <script src="<?php echo base_url();?>assets/build/js/custom.min.js"></script>
+    
+    <!-- Highcharts -->
+    <script src="<?php echo base_url();?>assets/vendors/highcharts/code/highcharts.js"></script>
+    <script src="<?php echo base_url();?>assets/vendors/highcharts/code/highcharts-more.js"></script>
+    <script src="<?php echo base_url();?>assets/vendors/highcharts/code/modules/series-label.js"></script>
+    <script src="<?php echo base_url();?>assets/vendors/highcharts/code/modules/exporting.js"></script>
+    <script src="<?php echo base_url();?>assets/vendors/highcharts/code/modules/export-data.js"></script>
+    
+    <!-- Custom js -->
+    <script src="<?php echo base_url();?>assets/custom/js/custom.js"></script>
+
 	
