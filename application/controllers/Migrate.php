@@ -8,8 +8,19 @@ class Migrate extends CI_Controller
 
 		if ($this->migration->current() === false) {
 			show_error($this->migration->error_string());
-		}else{
+		} else {
 			echo "migracion completa";
+		}
+	}
+
+	public function version($ver = 3)
+	{
+		$this->load->library("migration");
+
+		if (!$this->migration->version($ver)) {
+			show_error($this->migration->error_string());
+		}else{
+			echo "Se completo con exito";
 		}
 	}
 }

@@ -15,10 +15,10 @@ class Migration_registros extends CI_Migration
 				'auto_increment' => true
 			),
 			'fecha' => array(
-				'type' => 'DATETIME'
+				'type' => 'TIMESTAMP'
 			),
 			'estado' => array(
-				'type' => 'INT',
+				'type' => 'CHAR',
 				'constraint' => 1,
 				'unsigned' => true
 			),
@@ -40,9 +40,9 @@ class Migration_registros extends CI_Migration
 				'auto_increment' => true
 			),
 			'fecha' => array(
-				'type' => 'DATETIME'
+				'type' => 'TIMESTAMP'
 			),
-			'estado' => array(
+			'valor' => array(
 				'type' => 'INT',
 				'constraint' => 1,
 				'unsigned' => true
