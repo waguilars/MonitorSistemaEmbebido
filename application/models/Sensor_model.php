@@ -1,31 +1,32 @@
 <?php
-class Sensor_model extends CI_Model {
+class Sensor_model extends CI_Model
+{
+	function __construct()
+	{
+		$this->load->database();
+	}
 
- function __construct()
-        {
-                $this->load->database();
-                
-        }
-     
-        public function realiza_con()
-        {
-             
-                $query = $this->db->get('sensores');
-            
-                foreach ($query->result() as $row){
-                    echo $row->nombre;
-                    }
+	public function getSensores()
+	{
+		$query = $this->db->get('sensores');
+		foreach ($query->result() as $row) {
+			echo $row->nombre;
+		}
+	}
 
-        }
-
-        public function insert($id,$value){
-                $data= array(
-                        
-                        'id_sensor'=>$id 
-                        ,
-                        'estado'=>$value
-                );
-
-                $this->db->insert('reg_sensor',$data);
-        }
-    }
+	public function insert($sensor, $value)
+	{
+		if ($sensor == 1 || $sensor == 2) {
+			
+			$data = array(
+				'id_sensor' => $sensor,
+				'valor' => $value,
+			);
+			$this->db->set('fecha', 'NOW()', FALSE);
+			$this->db->insert('reg_sensor', $data);
+			return 200;	
+		} else {
+			return 400;
+		}
+	}
+}
