@@ -9,9 +9,23 @@ class Sensor_model extends CI_Model
 	public function getSensores()
 	{
 		$query = $this->db->get('sensores');
-		foreach ($query->result() as $row) {
-			echo $row->nombre;
-		}
+		return $query->result();
+	}
+
+	public function getData($sensor){
+		
+		$query = $this->db->get_where('reg_sensor', array('id_sensor'=>$sensor));
+		return $query->result();
+
+	}
+
+	public function getlastData($sensor){
+		$this->db->where('id_sensor', $sensor);
+		$this->db->order_by('fecha', 'DESC');
+		$this->db->limit(1);
+		$query = $this->db->get('reg_sensor');
+		return $query->result();
+
 	}
 
 	public function insert($sensor, $value)

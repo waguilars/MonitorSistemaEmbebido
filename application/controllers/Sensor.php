@@ -10,16 +10,26 @@ class Sensor extends CI_Controller
 
 	public function index()
 	{
-		$this->sensor_model->getSensores();
+		$sensores = $this->sensor_model->getSensores();
+		echo json_encode($sensores);
+	}
+
+	public function getData($sensor){
+		$data = $this->sensor_model->getData($sensor);
+		echo json_encode($data);
+	}
+
+	public function getLast($sensor){
+		$data = $this->sensor_model->getlastData($sensor);
+		echo json_encode($data);
 	}
 
 	public function insertar()
 	{
 		$sensor = $this->input->post('sensor');
 		$valor = $this->input->post('value');
-
 		$status = $this->sensor_model->insert($sensor, $valor);
-		echo json_encode($status);
+		
 		$this->output->set_status_header($status);
 	}
 }

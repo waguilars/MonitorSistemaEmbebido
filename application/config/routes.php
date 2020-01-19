@@ -54,3 +54,7 @@ $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 $route['sensor']['get'] = "sensor/index";
 $route['sensor']['post'] = "sensor/insertar";
+$route['sensor/temperatura']['get'] = 'sensor/getData/1';
+$route['sensor/humedad']['get'] = 'sensor/getData/2';
+$route['sensor/temperatura/last']['get'] = 'sensor/getLast/1';
+$route['sensor/humedad/last']['get'] = 'sensor/getLast/2';
