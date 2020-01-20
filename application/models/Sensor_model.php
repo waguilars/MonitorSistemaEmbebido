@@ -36,8 +36,24 @@ class Sensor_model extends CI_Model
 		$this->db->from('reg_sensor');
 		$this->db->order_by('fecha', 'DESC');
 		$this->db->limit(1);
+		$this->db->where('id_sensor', 1);
 		$query = $this->db->get();
-		return $query->result();
+		$temp = $query->result();
+
+		$this->db->select(array('valor', 'fecha', 'id_sensor'));
+		$this->db->from('reg_sensor');
+		$this->db->order_by('fecha', 'DESC');
+		$this->db->limit(1);
+		$this->db->where('id_sensor', 2);
+		$query = $this->db->get();
+		$hum = $query->result();
+
+		$data = array(
+			'temperatura' => $temp,
+			'humedad' => $hum
+		);
+		
+		return $data;
 	}
 
 	public function getData($sensor)
