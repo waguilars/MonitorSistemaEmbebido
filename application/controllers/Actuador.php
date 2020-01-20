@@ -10,15 +10,48 @@ class Actuador extends CI_Controller
     }
     public function index()
 	{
-        $actudores = $this->actuador_model->getActuadores();
-        // echo json_encode($actuadores);
+        $actudor = $this->actuador_model->getActuadores();
+         foreach ($actudor as $row ) {
+			 echo json_encode($row);
+		 }
     }
-    public function insertar($cal,$ven)
+    public function insertar()
 	{
-		//$temperatura = $this->input->post('temp');
-		//$humedad = $this->input->post('hum');
-		$status = $this->actuador_model->insert($cal, $ven);
+		$cal = $this->input->post('cal');
+
+		$ven = $this->input->post('ven');
+
+if ($cal!==NULL) {
+	$status = $this->actuador_model->insertacal($cal);
+	$this->output->set_status_header($status);
+}else{
+echo "ERROR  404";
+}
+
+if ($ven!==NULL) {
+	$status = $this->actuador_model->insertaven($ven);
+	$this->output->set_status_header($status);
+}else{
+	echo "ERROR 404";
+}
+
 		
-		$this->output->set_status_header($status);
+		
 	}
+
+	public function getLast(){
+		$lastData = $this->actuador_model->getLast();
+		echo json_encode($lastData);
+	}
+	public function getDataSensor($actuador){
+		$data = $this->actuador_model->getData($actuador);
+		echo json_encode($data);
+	}
+
+	public function getLastSensor($actuador){
+		$data = $this->actuador_model->getlastData($actuador);
+		echo json_encode($data);
+	}
+
+
 }

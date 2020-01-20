@@ -12,8 +12,12 @@ class Actuador_model extends CI_Model
 		$this->db->from('reg_actuador');
 
 		$query = $this->db->get();
+
+
+
 		$data['calefactor'] = array();
 		$data['ventilador'] = array();
+		
 		foreach ($query->result() as $row) {
 			if ($row->id_actuador == 1) {
 				array_push($data['calefactor'], array(
@@ -27,9 +31,6 @@ class Actuador_model extends CI_Model
 					'fecha' => $row->fecha
 				));
 			}
-		}
-		foreach ($query-result() as  $row) {
-			echo $row->estado;
 		}
 		return $data;
 	}
@@ -60,16 +61,10 @@ class Actuador_model extends CI_Model
 		return $query->result();
 	}
 	
-	public function insert($vent_est, $cale_est)
+	public function insertacal($cale_est)
 	{
-		$vent = array(
-			'id_actuador' => 1,
-			'estado' => $vent_est
-		);
-		$this->db->set('fecha', 'NOW()', false);
-		$this->db->insert('reg_actuador', $vent);
 		$cale = array(
-			'id_actuador' => 2,
+			'id_actuador' => 1,
 			'estado' => $cale_est
 		);
 		$this->db->set('fecha', 'NOW()', false);
@@ -77,6 +72,15 @@ class Actuador_model extends CI_Model
 		return 200;
 	}
 
-
+	public function insertaven($ven_est)
+	{
+		$cale = array(
+			'id_actuador' => 2,
+			'estado' => $ven_est
+		);
+		$this->db->set('fecha', 'NOW()', false);
+		$this->db->insert('reg_actuador', $cale);
+		return 200;
+	}
 
 } 
