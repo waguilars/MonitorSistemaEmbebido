@@ -1,7 +1,7 @@
+let lastTime;
+
 $(document).ready(function() {
-	//initCharts();
-	/* Temperature graph */
-	Highcharts.chart("temperature-chart");
+	initCharts();
 
 	/* Temperature gauge */
 	Highcharts.chart("temp-gauge", {
@@ -107,14 +107,11 @@ $(document).ready(function() {
 			}
 		]
 	});
-
-	initCharts();
 });
 
 const initCharts = () => {
 	// Peticion Ajax para graficar
-	let lastValue;
-	let lastTime;
+
 	$.ajax({
 		type: "get",
 		url: "sensor/index",
@@ -126,94 +123,122 @@ const initCharts = () => {
 					// parse value
 					element.valor = parseFloat(element.valor);
 					//parse date
-					auxdate = element.fecha.split(" ");
-					auxD = auxdate[0].split("-");
-					auxH = auxdate[1].split(":");
 
-					timesstamp = Date.UTC(
-						auxD[0],
-						auxD[1],
-						auxD[2],
-						auxH[0],
-						auxH[1],
-						auxH[2]
-					);
-					element.fecha = timesstamp;
+					element.fecha = getTimestamp(element.fecha);
+					setLastTime(element.fecha);
 				});
 			});
 
-			temperatura = response["temperatura"];
-			humedad = response["humedad"];
-
 			//graphic chart
-			chart = new Highcharts.chart(chart_options);
+			drawChart(response);
+
+			// Adding new ponts
+			setInterval(() => {
+				$.get("sensor/last", data => {
+					obj = JSON.parse(data);
+					time = getTimestamp(obj[0].fecha);
+					if (getLastTime() != time) {
+						series.addPoint([time, obj[1]], true, true);
+						setLastTime(time);
+					}
+				});
+			}, 1000);
 		}
 	});
 };
 
-let chart_options = {
-	chart: {
-		type: "spline"
-	},
-	title: {
-		text: "Estado de la temperatura y humedad actual"
-	},
-	subtitle: {
-		text: "Datos recogidos por arduino"
-	},
-	xAxis: {
-		categories: [
-			"Jan",
-			"Feb",
-			"Mar",
-			"Apr",
-			"May",
-			"Jun",
-			"Jul",
-			"Aug",
-			"Sep",
-			"Oct",
-			"Nov",
-			"Dec"
-		]
-	},
-	yAxis: {
+const drawChart = data => {
+	temperatura = Array();
+	humedad = Array();
+
+	data["temperatura"].forEach(el => {
+		temperatura.push(Array(el.fecha, el.valor));
+	});
+	data["humedad"].forEach(el => {
+		humedad.push(Array(el.fecha, el.valor));
+	});
+
+	Highcharts.chart("temperature-chart", {
+		chart: {
+			type: "spline",
+			events: {
+				load: function() {
+					series = this.series[0];
+				}
+			}
+		},
 		title: {
-			text: "Sensores"
+			text: "Estado de la temperatura y humedad actual"
 		},
-		labels: {
-			formatter: function() {
-				return this.value + "°";
-			}
-		}
-	},
-	tooltip: {
-		crosshairs: true,
-		shared: true
-	},
-	plotOptions: {
-		spline: {
-			marker: {
-				radius: 4,
-				lineColor: "#666666",
-				lineWidth: 1
-			}
-		}
-	},
-	series: [
-		{
-			name: "Temperatura",
-			marker: {
-				symbol: "square"
-			},
-			data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 23.3, 18.3, 13.9, 9.6]
+		subtitle: {
+			text: "Datos recogidos por arduino"
 		},
-		{
-			name: "Humedad",
-			marker: {
-				symbol: "diamond"
+		xAxis: {
+			type: "datetime",
+			dateTimeLabelFormats: {
+				month: "%e. %b",
+				year: "%b"
 			},
-			data: [4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
-		}
-	]
+			title: {
+				text: "Hora"
+			}
+		},
+		yAxis: {
+			title: {
+				text: "Sensores"
+			},
+			labels: {
+				formatter: function() {
+					return this.value + "°";
+				}
+			}
+		},
+		tooltip: {
+			crosshairs: true,
+			shared: true
+		},
+		plotOptions: {
+			spline: {
+				marker: {
+					radius: 4,
+					lineColor: "#666666",
+					lineWidth: 1
+				}
+			}
+		},
+		series: [
+			{
+				name: "Temperatura",
+				marker: {
+					symbol: "square"
+				},
+				data: temperatura
+			},
+			{
+				name: "Humedad",
+				marker: {
+					symbol: "diamond"
+				},
+				data: humedad
+			}
+		]
+	});
+};
+
+const setLastTime = time => {
+	lastTime = time;
+};
+
+const getLastTime = () => {
+	return lastTime;
+};
+
+const getTimestamp = cadena => {
+	auxdate = cadena.split(" ");
+	auxD = auxdate[0].split("-");
+	auxH = auxdate[1].split(":");
+
+	timesstamp = Date.UTC(auxD[0], auxD[1], auxD[2], auxH[0], auxH[1], auxH[2]);
+
+	return timesstamp;
 };

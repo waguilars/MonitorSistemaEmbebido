@@ -31,6 +31,15 @@ class Sensor_model extends CI_Model
 		return $data;
 	}
 
+	public function getLast(){
+		$this->db->select(array('valor', 'fecha', 'id_sensor'));
+		$this->db->from('reg_sensor');
+		$this->db->order_by('fecha', 'DESC');
+		$this->db->limit(1);
+		$query = $this->db->get();
+		return $query->result();
+	}
+
 	public function getData($sensor)
 	{
 		$query = $this->db->get_where('reg_sensor', array(
