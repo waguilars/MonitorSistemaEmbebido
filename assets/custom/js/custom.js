@@ -1,108 +1,7 @@
 $(document).ready(function() {
+	//initCharts();
 	/* Temperature graph */
-	Highcharts.chart("temperature-chart", {
-		chart: {
-			type: "spline"
-		},
-		title: {
-			text: "Monthly Average Temperature"
-		},
-		subtitle: {
-			text: "Source: WorldClimate.com"
-		},
-		xAxis: {
-			categories: [
-				"Jan",
-				"Feb",
-				"Mar",
-				"Apr",
-				"May",
-				"Jun",
-				"Jul",
-				"Aug",
-				"Sep",
-				"Oct",
-				"Nov",
-				"Dec"
-			]
-		},
-		yAxis: {
-			title: {
-				text: "Temperature"
-			},
-			labels: {
-				formatter: function() {
-					return this.value + "°";
-				}
-			}
-		},
-		tooltip: {
-			crosshairs: true,
-			shared: true
-		},
-		plotOptions: {
-			spline: {
-				marker: {
-					radius: 4,
-					lineColor: "#666666",
-					lineWidth: 1
-				}
-			}
-		},
-		series: [
-			{
-				name: "Tokyo",
-				marker: {
-					symbol: "square"
-				},
-				data: [
-					7.0,
-					6.9,
-					9.5,
-					14.5,
-					18.2,
-					21.5,
-					25.2,
-					{
-						y: 26.5,
-						marker: {
-							symbol: "url(https://www.highcharts.com/samples/graphics/sun.png)"
-						}
-					},
-					23.3,
-					18.3,
-					13.9,
-					9.6
-				]
-			},
-			{
-				name: "London",
-				marker: {
-					symbol: "diamond"
-				},
-				data: [
-					{
-						y: 3.9,
-						marker: {
-							symbol:
-								"url(https://www.highcharts.com/samples/graphics/snow.png)"
-						}
-					},
-					4.2,
-					5.7,
-					8.5,
-					11.9,
-					15.2,
-					17.0,
-					16.6,
-					14.2,
-					10.3,
-					6.6,
-					4.8
-				]
-			}
-		]
-	});
+	Highcharts.chart("temperature-chart");
 
 	/* Temperature gauge */
 	Highcharts.chart("temp-gauge", {
@@ -208,4 +107,113 @@ $(document).ready(function() {
 			}
 		]
 	});
+
+	initCharts();
 });
+
+const initCharts = () => {
+	// Peticion Ajax para graficar
+	let lastValue;
+	let lastTime;
+	$.ajax({
+		type: "get",
+		url: "sensor/index",
+		success: function(response) {
+			response = JSON.parse(response);
+			// cambio a numero
+			$.each(response, function(i, obj) {
+				obj.forEach(element => {
+					// parse value
+					element.valor = parseFloat(element.valor);
+					//parse date
+					auxdate = element.fecha.split(" ");
+					auxD = auxdate[0].split("-");
+					auxH = auxdate[1].split(":");
+
+					timesstamp = Date.UTC(
+						auxD[0],
+						auxD[1],
+						auxD[2],
+						auxH[0],
+						auxH[1],
+						auxH[2]
+					);
+					element.fecha = timesstamp;
+				});
+			});
+
+			temperatura = response["temperatura"];
+			humedad = response["humedad"];
+
+			//graphic chart
+			chart = new Highcharts.chart(chart_options);
+		}
+	});
+};
+
+let chart_options = {
+	chart: {
+		type: "spline"
+	},
+	title: {
+		text: "Estado de la temperatura y humedad actual"
+	},
+	subtitle: {
+		text: "Datos recogidos por arduino"
+	},
+	xAxis: {
+		categories: [
+			"Jan",
+			"Feb",
+			"Mar",
+			"Apr",
+			"May",
+			"Jun",
+			"Jul",
+			"Aug",
+			"Sep",
+			"Oct",
+			"Nov",
+			"Dec"
+		]
+	},
+	yAxis: {
+		title: {
+			text: "Sensores"
+		},
+		labels: {
+			formatter: function() {
+				return this.value + "°";
+			}
+		}
+	},
+	tooltip: {
+		crosshairs: true,
+		shared: true
+	},
+	plotOptions: {
+		spline: {
+			marker: {
+				radius: 4,
+				lineColor: "#666666",
+				lineWidth: 1
+			}
+		}
+	},
+	series: [
+		{
+			name: "Temperatura",
+			marker: {
+				symbol: "square"
+			},
+			data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 23.3, 18.3, 13.9, 9.6]
+		},
+		{
+			name: "Humedad",
+			marker: {
+				symbol: "diamond"
+			},
+			data: [4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
+		}
+	]
+};

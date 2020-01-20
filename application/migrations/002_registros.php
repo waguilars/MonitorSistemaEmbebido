@@ -43,8 +43,8 @@ class Migration_registros extends CI_Migration
 				'type' => 'TIMESTAMP'
 			),
 			'valor' => array(
-				'type' => 'INT',
-				'constraint' => 1,
+				'type' => 'DECIMAL',
+				'constraint' => "4,2",
 				'unsigned' => true
 			),
 			'id_sensor' => array(

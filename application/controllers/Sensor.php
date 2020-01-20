@@ -26,9 +26,9 @@ class Sensor extends CI_Controller
 
 	public function insertar()
 	{
-		$sensor = $this->input->post('sensor');
-		$valor = $this->input->post('value');
-		$status = $this->sensor_model->insert($sensor, $valor);
+		$temperatura = $this->input->post('temp');
+		$humedad = $this->input->post('hum');
+		$status = $this->sensor_model->insert($temperatura, $humedad);
 		
 		$this->output->set_status_header($status);
 	}
