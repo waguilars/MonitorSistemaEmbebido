@@ -131,18 +131,6 @@ const initCharts = () => {
 
 			//graphic chart
 			drawChart(response);
-
-			// Adding new ponts
-			setInterval(() => {
-				$.get("sensor/last", data => {
-					obj = JSON.parse(data);
-					time = getTimestamp(obj[0].fecha);
-					if (getLastTime() != time) {
-						series.addPoint([time, obj[1]], true, true);
-						setLastTime(time);
-					}
-				});
-			}, 1000);
 		}
 	});
 };
@@ -158,12 +146,35 @@ const drawChart = data => {
 		humedad.push(Array(el.fecha, el.valor));
 	});
 
+	Highcharts.setOptions({
+		time: {
+			useUTC: false
+		}
+	});
 	Highcharts.chart("temperature-chart", {
 		chart: {
 			type: "spline",
 			events: {
 				load: function() {
-					series = this.series[0];
+					// set up the updating of the chart each second
+					serieTemp = this.series[0];
+					serieHum = this.series[1];
+
+					// Adding dynamic new ponts
+					setInterval(() => {
+						$.get("sensor/last", data => {
+							obj = JSON.parse(data);
+							temp = Object.values(obj.temperatura[0]);
+							hum = Object.values(obj.humedad[0]);
+
+							time = getTimestamp(hum[1]);
+							if (getLastTime() != time) {
+								serieTemp.addPoint([time, temp[0]], true, true);
+								serieHum.addPoint([time, hum[0]], true, true);
+								setLastTime(time);
+							}
+						});
+					}, 1000);
 				}
 			}
 		},
