@@ -2,6 +2,8 @@ let lastTime;
 let chart;
 let tempGauge;
 let humGauge;
+const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+const timeOffSet = new Date().getTimezoneOffset()
 
 $(document).ready(function() {
 	/* Grafico de temperatura y humedad */
