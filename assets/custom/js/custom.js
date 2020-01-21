@@ -1,8 +1,14 @@
 let lastTime;
+let chart;
 
 $(document).ready(function() {
-	initCharts();
-
+	/* Grafico de temperatura y humedad */
+	$.getJSON("sensor", function(json) {
+		chartOptions.series[0].data = json.temperatura;
+		chartOptions.series[1].data = json.humedad;
+		setLastTime(json.temperatura[json.temperatura.length - 1][0]);
+		chart = new Highcharts.Chart("temperature-chart", chartOptions);
+	});
 	/* Temperature gauge */
 	Highcharts.chart("temp-gauge", {
 		chart: {
@@ -109,131 +115,87 @@ $(document).ready(function() {
 	});
 });
 
-const initCharts = () => {
-	// Peticion Ajax para graficar
+const requestSensoresData = () => {
+	setInterval(() => {
+		$.get("sensor/last", resp => {
+			data = JSON.parse(resp);
 
-	$.ajax({
-		type: "get",
-		url: "sensor/index",
-		success: function(response) {
-			response = JSON.parse(response);
-			// cambio a numero
-			$.each(response, function(i, obj) {
-				obj.forEach(element => {
-					// parse value
-					element.valor = parseFloat(element.valor);
-					//parse date
-
-					element.fecha = getTimestamp(element.fecha);
-					setLastTime(element.fecha);
-				});
-			});
-
-			//graphic chart
-			drawChart(response);
-		}
-	});
+			if (data.temperatura[0] > getLastTime()) {
+				chart.series[0].addPoint(data.temperatura, true, true, true);
+				chart.series[1].addPoint(data.humedad, true, true, true);
+				setLastTime(data.temperatura[0]);
+			}
+		});
+	}, 1000);
 };
 
-const drawChart = data => {
-	temperatura = Array();
-	humedad = Array();
-
-	data["temperatura"].forEach(el => {
-		temperatura.push(Array(el.fecha, el.valor));
-	});
-	data["humedad"].forEach(el => {
-		humedad.push(Array(el.fecha, el.valor));
-	});
-
-	Highcharts.setOptions({
-		time: {
-			useUTC: false
+let chartOptions = {
+	chart: {
+		type: "spline",
+		animation: Highcharts.svg, // don't animate in old IE
+		marginRight: 10,
+		events: {
+			load: requestSensoresData
 		}
-	});
-	Highcharts.chart("temperature-chart", {
-		chart: {
-			type: "spline",
-			events: {
-				load: function() {
-					// set up the updating of the chart each second
-					serieTemp = this.series[0];
-					serieHum = this.series[1];
+	},
 
-					// Adding dynamic new ponts
-					setInterval(() => {
-						$.get("sensor/last", data => {
-							obj = JSON.parse(data);
-							temp = Object.values(obj.temperatura[0]);
-							hum = Object.values(obj.humedad[0]);
+	time: {
+		useUTC: false
+	},
 
-							time = getTimestamp(hum[1]);
-							if (getLastTime() != time) {
-								serieTemp.addPoint([time, temp[0]], true, true);
-								serieHum.addPoint([time, hum[0]], true, true);
-								setLastTime(time);
-							}
-						});
-					}, 1000);
-				}
-			}
+	title: {
+		text: "Estado de la temperatura y humedad actual"
+	},
+
+	subtitle: {
+		text: "Datos recogidos por arduino"
+	},
+
+	xAxis: {
+		type: "datetime",
+		dateTimeLabelFormats: {
+			month: "%e. %b",
+			year: "%b"
 		},
 		title: {
-			text: "Estado de la temperatura y humedad actual"
+			text: "Hora"
+		}
+	},
+
+	yAxis: {
+		title: {
+			text: "Sensores"
 		},
-		subtitle: {
-			text: "Datos recogidos por arduino"
-		},
-		xAxis: {
-			type: "datetime",
-			dateTimeLabelFormats: {
-				month: "%e. %b",
-				year: "%b"
-			},
-			title: {
-				text: "Hora"
+		labels: {
+			formatter: function() {
+				return this.value + "°";
 			}
+		}
+	},
+
+	tooltip: {
+		headerFormat: "<b>{series.name}</b><br/>",
+		pointFormat: "{point.x:%Y-%m-%d %H:%M:%S}<br/>{point.y:.2f}"
+	},
+
+	legend: {
+		enabled: false
+	},
+
+	exporting: {
+		enabled: false
+	},
+
+	series: [
+		{
+			name: "Temperatura",
+			data: []
 		},
-		yAxis: {
-			title: {
-				text: "Sensores"
-			},
-			labels: {
-				formatter: function() {
-					return this.value + "°";
-				}
-			}
-		},
-		tooltip: {
-			crosshairs: true,
-			shared: true
-		},
-		plotOptions: {
-			spline: {
-				marker: {
-					radius: 4,
-					lineColor: "#666666",
-					lineWidth: 1
-				}
-			}
-		},
-		series: [
-			{
-				name: "Temperatura",
-				marker: {
-					symbol: "square"
-				},
-				data: temperatura
-			},
-			{
-				name: "Humedad",
-				marker: {
-					symbol: "diamond"
-				},
-				data: humedad
-			}
-		]
-	});
+		{
+			name: "Humedad",
+			data: []
+		}
+	]
 };
 
 const setLastTime = time => {

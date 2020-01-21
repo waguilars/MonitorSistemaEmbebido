@@ -15,23 +15,26 @@ class Sensor_model extends CI_Model
 		$data['temperatura'] = array();
 		$data['humedad'] = array();
 		foreach ($query->result() as $row) {
+			$value = (float)$row->valor;
+			$timestamp = strtotime($row->fecha);
 			if ($row->id_sensor == 1) {
 				array_push($data['temperatura'], array(
-					'valor' => $row->valor,
-					'fecha' => $row->fecha
+					$timestamp,
+					$value
 				));
 			}
 			if ($row->id_sensor == 2) {
 				array_push($data['humedad'], array(
-					'valor' => $row->valor,
-					'fecha' => $row->fecha
+					$timestamp,
+					$value
 				));
 			}
 		}
 		return $data;
 	}
 
-	public function getLast(){
+	public function getLast()
+	{
 		$this->db->select(array('valor', 'fecha', 'id_sensor'));
 		$this->db->from('reg_sensor');
 		$this->db->order_by('fecha', 'DESC');
@@ -49,10 +52,22 @@ class Sensor_model extends CI_Model
 		$hum = $query->result();
 
 		$data = array(
-			'temperatura' => $temp,
-			'humedad' => $hum
+			'temperatura' => array(),
+			'humedad' => array()
 		);
-		
+		foreach ($temp as $prop) {
+			$value = (float)$prop->valor;
+			$timestamp = strtotime($prop->fecha);
+			array_push($data['humedad'], $timestamp);
+			array_push($data['humedad'], $value);
+		}
+		foreach ($hum as $prop) {
+			$value = (float)$prop->valor;
+			$timestamp = strtotime($prop->fecha);
+			array_push($data['temperatura'], $timestamp);
+			array_push($data['temperatura'], $value);
+		}
+
 		return $data;
 	}
 
