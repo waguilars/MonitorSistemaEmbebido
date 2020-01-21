@@ -1,7 +1,8 @@
         <!-- footer content -->
         <footer>
           <div class="pull-right">
-            Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com">Colorlib</a>
+            Proyecto Integrador Sexto Nivel -
+            Universidad Politecnica Salesiana
           </div>
           <div class="clearfix"></div>
         </footer>

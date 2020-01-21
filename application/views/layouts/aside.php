@@ -28,7 +28,16 @@
                 <ul class="nav side-menu">
                   <li><a><i class="fa fa-home"></i> Home <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                      <li><a href="<?=base_url();?>">Dashboard</a></li>
+                      <li><a href="<?=base_url('index');?>">Estado de los sensores</a></li>
+                      <li><a href="<?=base_url('actuadores');?>">Estado de los actuadores</a></li>
+                    </ul>
+                  </li>
+                  <li>
+                  <a>
+                    <i class="fa fa-bar-chart-o"></i>Export Data<span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu" style="display:none;">
+                      <li><a href="<?=base_url('export/pdf');?>">Export to PDF</a></li>
+                      <li><a href="<?=base_url('export/excel');?>">Export to Excel</a></li>
                     </ul>
                   </li>
                 </ul>
