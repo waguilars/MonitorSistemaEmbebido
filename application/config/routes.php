@@ -52,6 +52,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $route['default_controller'] = 'dashboard';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
+
+// Sensores
 $route['sensor']['get'] = "sensor/index";
 $route['sensor']['post'] = "sensor/insertar";
 $route['sensor/temperatura']['get'] = 'sensor/getDataSensor/1';
@@ -59,3 +61,13 @@ $route['sensor/humedad']['get'] = 'sensor/getDataSensor/2';
 $route['sensor/temperatura/last']['get'] = 'sensor/getLastSensor/1';
 $route['sensor/humedad/last']['get'] = 'sensor/getLastSensor/2';
 $route['sensor/last']['get'] = 'sensor/getLast';
+
+
+//Actuadores
+$route['actuador']['get'] = 'actuador';
+$route['actuador/calefactor']['get'] = 'actuador/getalldata/1';
+$route['actuador/ventilador']['get'] = 'actuador/getalldata/2';
+$route['actuador/calefactor/last']['get'] = 'Actuador/getlastdata/1';
+$route['actuador/ventilador/last']['get'] = 'Actuador/getlastdata/2';
+$route['actuador/last']['get'] = 'actuador/getlast';
+$route['actuador']['post'] = 'actuador/insertar';

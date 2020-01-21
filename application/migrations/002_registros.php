@@ -17,10 +17,14 @@ class Migration_registros extends CI_Migration
 			'fecha' => array(
 				'type' => 'TIMESTAMP'
 			),
-			'estado' => array(
+			'modo' => array(
 				'type' => 'CHAR',
-				'constraint' => 1,
-				'unsigned' => true
+				'constraint' => 1
+			),
+			'estado' => array(
+				'type' => 'INT',
+				'unsigned' => true,
+				'null' => true
 			),
 			'id_actuador' => array(
 				'type' => 'INT',

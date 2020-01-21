@@ -18,8 +18,8 @@ class Actuador extends CI_Controller
     public function insertar()
 	{
 		$cal = $this->input->post('cal');
-
 		$ven = $this->input->post('ven');
+		
 
 if ($cal!==NULL) {
 	$status = $this->actuador_model->insertacal($cal);
@@ -43,12 +43,12 @@ if ($ven!==NULL) {
 		$lastData = $this->actuador_model->getLast();
 		echo json_encode($lastData);
 	}
-	public function getDataSensor($actuador){
+	public function getAllData($actuador){
 		$data = $this->actuador_model->getData($actuador);
 		echo json_encode($data);
 	}
 
-	public function getLastSensor($actuador){
+	public function getLastData($actuador){
 		$data = $this->actuador_model->getlastData($actuador);
 		echo json_encode($data);
 	}
