@@ -4,6 +4,12 @@ let chart;
 $(document).ready(function() {
 	/* Grafico de temperatura y humedad */
 	$.getJSON("sensor", function(json) {
+		for (let i = 0; i < json.temperatura.length; i++) {
+			json.temperatura[i][0] = getTimestamp(json.temperatura[i][0]);
+			json.humedad[i][0] = getTimestamp(json.humedad[i][0]);
+		}
+		//console.log(json);
+
 		chartOptions.series[0].data = json.temperatura;
 		chartOptions.series[1].data = json.humedad;
 		setLastTime(json.temperatura[json.temperatura.length - 1][0]);
@@ -119,6 +125,8 @@ const requestSensoresData = () => {
 	setInterval(() => {
 		$.get("sensor/last", resp => {
 			data = JSON.parse(resp);
+			data.temperatura[0] = getTimestamp(data.temperatura[0]);
+			data.humedad[0] = getTimestamp(data.humedad[0]);
 
 			if (data.temperatura[0] > getLastTime()) {
 				chart.series[0].addPoint(data.temperatura, true, true, true);

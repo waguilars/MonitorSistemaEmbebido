@@ -16,7 +16,7 @@ class Sensor_model extends CI_Model
 		$data['humedad'] = array();
 		foreach ($query->result() as $row) {
 			$value = (float)$row->valor;
-			$timestamp = strtotime($row->fecha);
+			$timestamp = $row->fecha;
 			if ($row->id_sensor == 1) {
 				array_push($data['temperatura'], array(
 					$timestamp,
@@ -57,13 +57,13 @@ class Sensor_model extends CI_Model
 		);
 		foreach ($temp as $prop) {
 			$value = (float)$prop->valor;
-			$timestamp = strtotime($prop->fecha);
+			$timestamp = $prop->fecha;
 			array_push($data['humedad'], $timestamp);
 			array_push($data['humedad'], $value);
 		}
 		foreach ($hum as $prop) {
 			$value = (float)$prop->valor;
-			$timestamp = strtotime($prop->fecha);
+			$timestamp = $prop->fecha;
 			array_push($data['temperatura'], $timestamp);
 			array_push($data['temperatura'], $value);
 		}
