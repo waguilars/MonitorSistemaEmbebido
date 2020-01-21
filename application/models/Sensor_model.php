@@ -58,14 +58,14 @@ class Sensor_model extends CI_Model
 		foreach ($temp as $prop) {
 			$value = (float)$prop->valor;
 			$timestamp = $prop->fecha;
-			array_push($data['humedad'], $timestamp);
-			array_push($data['humedad'], $value);
+			array_push($data['temperatura'], $timestamp);
+			array_push($data['temperatura'], $value);
 		}
 		foreach ($hum as $prop) {
 			$value = (float)$prop->valor;
 			$timestamp = $prop->fecha;
-			array_push($data['temperatura'], $timestamp);
-			array_push($data['temperatura'], $value);
+			array_push($data['humedad'], $timestamp);
+			array_push($data['humedad'], $value);
 		}
 
 		return $data;

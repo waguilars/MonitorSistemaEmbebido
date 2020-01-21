@@ -6,224 +6,27 @@ let humGauge;
 $(document).ready(function() {
 	/* Grafico de temperatura y humedad */
 	$.getJSON("sensor", function(json) {
+		console.log(json);
 		for (let i = 0; i < json.temperatura.length; i++) {
 			json.temperatura[i][0] = getTimestamp(json.temperatura[i][0]);
 			json.humedad[i][0] = getTimestamp(json.humedad[i][0]);
 		}
-		//console.log(json);
 
 		chartOptions.series[0].data = json.temperatura;
 		chartOptions.series[1].data = json.humedad;
 		setLastTime(json.temperatura[json.temperatura.length - 1][0]);
 		chart = new Highcharts.Chart("temperature-chart", chartOptions);
 	});
-	/* Temperature gauge */
-	Highcharts.chart("temp-gauge", {
-		chart: {
-			type: "gauge",
-			plotBackgroundColor: null,
-			plotBackgroundImage: null,
-			plotBorderWidth: 0,
-			plotShadow: false
-		},
 
-		title: {
-			text: "Speedometer"
-		},
+	/* Temperature gauge -> temp_gauge*/
+	tempGauge = new Highcharts.Chart("temp-gauge", gaugeOptions);
+	tempGauge.series[0].name = "Temperatura";
+	updateGauge(tempGauge, 1);
 
-		pane: {
-			startAngle: -150,
-			endAngle: 150,
-			background: [
-				{
-					backgroundColor: {
-						linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
-						stops: [
-							[0, "#FFF"],
-							[1, "#333"]
-						]
-					},
-					borderWidth: 0,
-					outerRadius: "109%"
-				},
-				{
-					backgroundColor: {
-						linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
-						stops: [
-							[0, "#333"],
-							[1, "#FFF"]
-						]
-					},
-					borderWidth: 1,
-					outerRadius: "107%"
-				},
-				{
-					// default background
-				},
-				{
-					backgroundColor: "#DDD",
-					borderWidth: 0,
-					outerRadius: "105%",
-					innerRadius: "103%"
-				}
-			]
-		},
-
-		// the value axis
-		yAxis: {
-			min: 0,
-			max: 200,
-
-			minorTickInterval: "auto",
-			minorTickWidth: 1,
-			minorTickLength: 10,
-			minorTickPosition: "inside",
-			minorTickColor: "#666",
-
-			tickPixelInterval: 30,
-			tickWidth: 2,
-			tickPosition: "inside",
-			tickLength: 10,
-			tickColor: "#666",
-			labels: {
-				step: 2,
-				rotation: "auto"
-			},
-			title: {
-				text: "km/h"
-			},
-			plotBands: [
-				{
-					from: 0,
-					to: 120,
-					color: "#55BF3B" // green
-				},
-				{
-					from: 120,
-					to: 160,
-					color: "#DDDF0D" // yellow
-				},
-				{
-					from: 160,
-					to: 200,
-					color: "#DF5353" // red
-				}
-			]
-		},
-
-		series: [
-			{
-				name: "Speed",
-				data: [80],
-				tooltip: {
-					valueSuffix: " km/h"
-				}
-			}
-		]
-	});
-	Highcharts.chart("hum-gauge", {
-		chart: {
-			type: "gauge",
-			plotBackgroundColor: null,
-			plotBackgroundImage: null,
-			plotBorderWidth: 0,
-			plotShadow: false
-		},
-
-		title: {
-			text: "Speedometer"
-		},
-
-		pane: {
-			startAngle: -150,
-			endAngle: 150,
-			background: [
-				{
-					backgroundColor: {
-						linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
-						stops: [
-							[0, "#FFF"],
-							[1, "#333"]
-						]
-					},
-					borderWidth: 0,
-					outerRadius: "109%"
-				},
-				{
-					backgroundColor: {
-						linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
-						stops: [
-							[0, "#333"],
-							[1, "#FFF"]
-						]
-					},
-					borderWidth: 1,
-					outerRadius: "107%"
-				},
-				{
-					// default background
-				},
-				{
-					backgroundColor: "#DDD",
-					borderWidth: 0,
-					outerRadius: "105%",
-					innerRadius: "103%"
-				}
-			]
-		},
-
-		// the value axis
-		yAxis: {
-			min: 0,
-			max: 200,
-
-			minorTickInterval: "auto",
-			minorTickWidth: 1,
-			minorTickLength: 10,
-			minorTickPosition: "inside",
-			minorTickColor: "#666",
-
-			tickPixelInterval: 30,
-			tickWidth: 2,
-			tickPosition: "inside",
-			tickLength: 10,
-			tickColor: "#666",
-			labels: {
-				step: 2,
-				rotation: "auto"
-			},
-			title: {
-				text: "km/h"
-			},
-			plotBands: [
-				{
-					from: 0,
-					to: 120,
-					color: "#55BF3B" // green
-				},
-				{
-					from: 120,
-					to: 160,
-					color: "#DDDF0D" // yellow
-				},
-				{
-					from: 160,
-					to: 200,
-					color: "#DF5353" // red
-				}
-			]
-		},
-
-		series: [
-			{
-				name: "Speed",
-				data: [80],
-				tooltip: {
-					valueSuffix: " km/h"
-				}
-			}
-		]
-	});
+	/* Humidity gauge ->gum-gauge */
+	humGauge = Highcharts.chart("hum-gauge", gaugeOptions);
+	humGauge.series[0].name = "Humedad";
+	updateGauge(humGauge, 2);
 });
 
 const requestSensoresData = () => {
@@ -238,6 +41,26 @@ const requestSensoresData = () => {
 				chart.series[1].addPoint(data.humedad, true, true, true);
 				setLastTime(data.temperatura[0]);
 			}
+		});
+	}, 1000);
+};
+
+const updateGauge = (gauge, sensor) => {
+	setInterval(() => {
+		let point = gauge.series[0].points[0];
+
+		$.getJSON("sensor/last", json => {
+			console.log(json.temperatura[1]);
+			let nwepoint;
+			if (sensor == 1) {
+				nwepoint = json.temperatura[1];
+			} else {
+				if (sensor == 2) {
+					nwepoint = json.humedad[1];
+				}
+			}
+
+			point.update(nwepoint);
 		});
 	}, 1000);
 };
@@ -311,6 +134,106 @@ let chartOptions = {
 	]
 };
 
+let gaugeOptions = {
+	chart: {
+		type: "gauge",
+		plotBackgroundColor: null,
+		plotBackgroundImage: null,
+		plotBorderWidth: 0,
+		plotShadow: false
+	},
+
+	title: {
+		text: "Valor actual"
+	},
+
+	pane: {
+		startAngle: -150,
+		endAngle: 150,
+		background: [
+			{
+				backgroundColor: {
+					linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+					stops: [
+						[0, "#FFF"],
+						[1, "#333"]
+					]
+				},
+				borderWidth: 0,
+				outerRadius: "109%"
+			},
+			{
+				backgroundColor: {
+					linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+					stops: [
+						[0, "#333"],
+						[1, "#FFF"]
+					]
+				},
+				borderWidth: 1,
+				outerRadius: "107%"
+			},
+			{
+				// default background
+			},
+			{
+				backgroundColor: "#DDD",
+				borderWidth: 0,
+				outerRadius: "105%",
+				innerRadius: "103%"
+			}
+		]
+	},
+
+	// the value axis
+	yAxis: {
+		min: 0,
+		max: 50,
+
+		minorTickInterval: "auto",
+		minorTickWidth: 1,
+		minorTickLength: 10,
+		minorTickPosition: "inside",
+		minorTickColor: "#666",
+
+		tickPixelInterval: 30,
+		tickWidth: 2,
+		tickPosition: "inside",
+		tickLength: 10,
+		tickColor: "#666",
+		labels: {
+			step: 2,
+			rotation: "auto"
+		},
+
+		plotBands: [
+			{
+				from: 0,
+				to: 25,
+				color: "#55BF3B" // green
+			},
+			{
+				from: 25,
+				to: 40,
+				color: "#DDDF0D" // yellow
+			},
+			{
+				from: 40,
+				to: 50,
+				color: "#DF5353" // red
+			}
+		]
+	},
+
+	series: [
+		{
+			data: [0],
+			tooltip: {
+				valueSuffix: "°"
+			}
+		}
+	]
+};
 const setLastTime = time => {
 	lastTime = time;
 };
