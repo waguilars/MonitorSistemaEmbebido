@@ -28,7 +28,7 @@
                 <ul class="nav side-menu">
                   <li><a><i class="fa fa-home"></i> Home <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                      <li><a href="<?=base_url('index');?>">Estado de los sensores</a></li>
+                      <li><a href="<?=base_url();?>">Estado de los sensores</a></li>
                       <li><a href="<?=base_url('actuadores');?>">Estado de los actuadores</a></li>
                     </ul>
                   </li>
