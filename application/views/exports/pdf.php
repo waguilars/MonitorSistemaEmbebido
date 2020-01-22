@@ -22,7 +22,19 @@
 							<th scope="col">Valor</th>
 						</tr>
 					</thead>
-					<tbody></tbody>
+					<tbody>
+						<!-- Codigo php -->
+						<?php
+						foreach ($temp as $temperatura) {
+							echo "<tr>";
+							echo "<th>$temperatura->id</th>";
+							echo "<td>$temperatura->fecha</td>";
+							echo "<td>$temperatura->valor</td>";
+							echo "</tr>";
+						}
+						?>
+											
+					</tbody>
 				</table>
 		</div>
 		<div class="container">
@@ -35,7 +47,18 @@
 							<th scope="col">Valor</th>
 						</tr>
 					</thead>
-					<tbody></tbody>
+					<tbody>
+						<!-- Codigo php -->
+						<?php
+						foreach ($hum as $humedad) {
+							echo "<tr>";
+							echo "<th>$humedad->id</th>";
+							echo "<td>$humedad->fecha</td>";
+							echo "<td>$humedad->valor</td>";
+							echo "</tr>";
+						}
+						?>
+					</tbody>
 				</table>
 		</div>
 
@@ -43,6 +66,6 @@
 		<script src="<?php echo base_url(); ?>assets/vendors/jquery/dist/jquery.min.js"></script>
 		<!-- Bootstrap -->
 		<script src="<?php echo base_url(); ?>assets/vendors/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-		<script src="<?php echo base_url(); ?>assets/custom/js/pdf.js"></script>
+		<!-- <script src="<?php echo base_url(); ?>assets/custom/js/pdf.js"></script> -->
 	</body>
 </html>

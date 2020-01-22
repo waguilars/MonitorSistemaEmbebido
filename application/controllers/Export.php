@@ -7,16 +7,23 @@ class Export extends CI_Controller
 	{
 		parent::__construct();
 		$this->load->library('pdf');
+		$this->load->model('sensor_model');
 	}
 
 	public function pdf()
 	{
-
-		$html = $this->load->view('exports/pdf');
+		$temp_data = $this->sensor_model->getData(1);
+		$hum_data = $this->sensor_model->getData(2);
+		
+		$data = array(
+			'temp'=> $temp_data,
+			'hum' => $hum_data
+		);
+		$html = $this->load->view('exports/pdf', $data, true);
 		$filename = 'reporte';
 
-		//$this->pdf->load_html($html);
-		//$this->pdf->render();
-		//$this->pdf->stream($filename, array("Attachment" => 0));
+		$this->pdf->load_html($html);
+		$this->pdf->render();
+		$this->pdf->stream($filename, array("Attachment" => 0));
 	}
 }
