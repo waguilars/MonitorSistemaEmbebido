@@ -11,8 +11,8 @@ const timeOffSet = new Date().getTimezoneOffset();
 $(document).ready(function() {
 	/* Grafico de temperatura y humedad */
 	$.getJSON("sensor", function(json) {
-		//console.log(json);
-		for (let i = 0; i < json.temperatura.length; i++) {
+		console.log(json.temperatura);
+		for (let i = 0; i < json.temperatura.length-1; i++) {
 			json.temperatura[i][0] = getTimestamp(json.temperatura[i][0]);
 			json.humedad[i][0] = getTimestamp(json.humedad[i][0]);
 		}
