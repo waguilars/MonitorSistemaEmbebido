@@ -1,14 +1,17 @@
 let lastTime;
+let lasttime2;
 let chart;
 let tempGauge;
 let humGauge;
+let tempTable;
+let humTable;
 const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-const timeOffSet = new Date().getTimezoneOffset()
+const timeOffSet = new Date().getTimezoneOffset();
 
 $(document).ready(function() {
 	/* Grafico de temperatura y humedad */
 	$.getJSON("sensor", function(json) {
-		console.log(json);
+		//console.log(json);
 		for (let i = 0; i < json.temperatura.length; i++) {
 			json.temperatura[i][0] = getTimestamp(json.temperatura[i][0]);
 			json.humedad[i][0] = getTimestamp(json.humedad[i][0]);
@@ -29,7 +32,77 @@ $(document).ready(function() {
 	humGauge = Highcharts.chart("hum-gauge", gaugeOptions);
 	humGauge.series[0].name = "Humedad";
 	updateGauge(humGauge, 2);
+
+	/* Tabla de datos de temperatura */
+	tempTable = document.getElementById("temp-table").tBodies[0];
+	requestDataTable("temperatura", tempTable);
+	setAutoUpdateTable("temperatura", tempTable);
+	/* Tabla de datos de temperatura */
+	humTable = document.getElementById("hum-table").tBodies[0];
+	requestDataTable("humedad", humTable);
+	setAutoUpdateTable("humedad", humTable);
 });
+
+const setAutoUpdateTable = (sensor, tbodie) => {
+	setInterval(() => {
+		//Agregar Fila al inicio
+		$.getJSON("sensor/" + sensor + "/last/1", json => {
+			json = json[0];
+
+			if (getTimestamp(json.fecha) > getLastTime()) {
+				let row = document.createElement("tr");
+
+				//elementos de la fila
+				let id = document.createElement("th");
+				id.scope = "row";
+				let fecha = document.createElement("td");
+				let valor = document.createElement("td");
+				//agrego valores a las celdas
+				id.appendChild(document.createTextNode(json.id));
+				fecha.appendChild(document.createTextNode(json.fecha));
+				valor.appendChild(document.createTextNode(json.valor));
+
+				//agrego celdas al row
+				row.appendChild(id);
+				row.appendChild(fecha);
+				row.appendChild(valor);
+				//agrego al inicio
+				tbodie.innerHTML = row.innerHTML + tbodie.innerHTML;
+
+				//Eliminar fila del final
+				if (tbodie.rows.length > 8) {
+					tbodie.deleteRow(tbodie.rows.length - 1);
+				}
+			}
+		});
+	}, 1000);
+};
+
+const requestDataTable = (sensor, tbodie) => {
+	$.getJSON("sensor/" + sensor + "/last/8", json => {
+		json.forEach(element => {
+			//creo elementos del dom
+			let row = document.createElement("tr");
+			let id = document.createElement("th");
+			id.scope = "row";
+			let fecha = document.createElement("td");
+			let valor = document.createElement("td");
+
+			//agrego valores a las celdas
+			id.appendChild(document.createTextNode(element.id));
+			fecha.appendChild(document.createTextNode(element.fecha));
+			valor.appendChild(document.createTextNode(element.valor));
+
+			//agrego celdas al row
+			row.appendChild(id);
+			row.appendChild(fecha);
+			row.appendChild(valor);
+
+			//agrego row a la tabla
+			tbodie.appendChild(row);
+		});
+	});
+};
 
 const requestSensoresData = () => {
 	setInterval(() => {
@@ -52,7 +125,7 @@ const updateGauge = (gauge, sensor) => {
 		let point = gauge.series[0].points[0];
 
 		$.getJSON("sensor/last", json => {
-			console.log(json.temperatura[1]);
+			//console.log(json.temperatura[1]);
 			let nwepoint;
 			if (sensor == 1) {
 				nwepoint = json.temperatura[1];

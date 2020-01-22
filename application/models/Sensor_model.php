@@ -79,11 +79,11 @@ class Sensor_model extends CI_Model
 		return $query->result();
 	}
 
-	public function getlastData($sensor)
+	public function getlastData($sensor, $lim)
 	{
 		$this->db->where('id_sensor', $sensor);
 		$this->db->order_by('fecha', 'DESC');
-		$this->db->limit(1);
+		$this->db->limit($lim);
 		$query = $this->db->get('reg_sensor');
 		return $query->result();
 	}

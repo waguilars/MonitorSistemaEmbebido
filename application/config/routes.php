@@ -58,8 +58,8 @@ $route['sensor']['get'] = "sensor/index";
 $route['sensor']['post'] = "sensor/insertar";
 $route['sensor/temperatura']['get'] = 'sensor/getDataSensor/1';
 $route['sensor/humedad']['get'] = 'sensor/getDataSensor/2';
-$route['sensor/temperatura/last']['get'] = 'sensor/getLastSensor/1';
-$route['sensor/humedad/last']['get'] = 'sensor/getLastSensor/2';
+$route['sensor/temperatura/last/(:num)']['get'] = 'sensor/getLastSensor/1/$1';
+$route['sensor/humedad/last/(:num)']['get'] = 'sensor/getLastSensor/2/$1';
 $route['sensor/last']['get'] = 'sensor/getLast';
 
 

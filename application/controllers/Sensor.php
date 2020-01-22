@@ -24,8 +24,8 @@ class Sensor extends CI_Controller
 		echo json_encode($data);
 	}
 
-	public function getLastSensor($sensor){
-		$data = $this->sensor_model->getlastData($sensor);
+	public function getLastSensor($sensor, $limit){
+		$data = $this->sensor_model->getlastData($sensor, $limit);
 		echo json_encode($data);
 	}
 
