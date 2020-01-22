@@ -11,12 +11,12 @@ const timeOffSet = new Date().getTimezoneOffset();
 $(document).ready(function() {
 	/* Grafico de temperatura y humedad */
 	$.getJSON("sensor", function(json) {
-		console.log(json.temperatura);
-		for (let i = 0; i < json.temperatura.length-1; i++) {
+		//console.log(json.temperatura);
+		for (let i = 0; i < json.temperatura.length; i++) {
 			json.temperatura[i][0] = getTimestamp(json.temperatura[i][0]);
 			json.humedad[i][0] = getTimestamp(json.humedad[i][0]);
 		}
-
+		
 		chartOptions.series[0].data = json.temperatura;
 		chartOptions.series[1].data = json.humedad;
 		setLastTime(json.temperatura[json.temperatura.length - 1][0]);
@@ -125,7 +125,7 @@ const updateGauge = (gauge, sensor) => {
 		let point = gauge.series[0].points[0];
 
 		$.getJSON("sensor/last", json => {
-			//console.log(json.temperatura[1]);
+			//console.log(json.temperatura);
 			let nwepoint;
 			if (sensor == 1) {
 				nwepoint = json.temperatura[1];
