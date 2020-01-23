@@ -12,7 +12,27 @@ class Sensor extends CI_Controller
 
 	public function index()
 	{
-		$sensores = $this->sensor_model->getSensores();
+		$data = $this->sensor_model->getSensores();
+
+		$sensores['temperatura'] = array();
+		$sensores['humedad'] = array();
+		foreach ($data as $row) {
+			$value = (float)$row->valor;
+			$timestamp = $row->fecha;
+			if ($row->id_sensor == 1) {
+				array_push($sensores['temperatura'], array(
+					$timestamp,
+					$value
+				));
+			}
+			if ($row->id_sensor == 2) {
+				array_push($sensores['humedad'], array(
+					$timestamp,
+					$value
+				));
+			}
+		}
+
 		echo json_encode($sensores);
 	}
 

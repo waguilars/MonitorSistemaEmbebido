@@ -8,29 +8,12 @@ class Sensor_model extends CI_Model
 
 	public function getSensores()
 	{
-		$this->db->select(array('valor', 'fecha', 'id_sensor'));
+		$this->db->select(array('id','valor', 'fecha', 'id_sensor'));
 		$this->db->from('reg_sensor');
 
 		$query = $this->db->get();
-		$data['temperatura'] = array();
-		$data['humedad'] = array();
-		foreach ($query->result() as $row) {
-			$value = (float)$row->valor;
-			$timestamp = $row->fecha;
-			if ($row->id_sensor == 1) {
-				array_push($data['temperatura'], array(
-					$timestamp,
-					$value
-				));
-			}
-			if ($row->id_sensor == 2) {
-				array_push($data['humedad'], array(
-					$timestamp,
-					$value
-				));
-			}
-		}
-		return $data;
+		
+		return $query->result();
 	}
 
 	public function getLast()
