@@ -16,6 +16,22 @@ class Sensor_model extends CI_Model
 		return $query->result();
 	}
 
+	public function getlimitData($limit){
+		$sql =  "SELECT * FROM ( SELECT * FROM reg_sensor WHERE id_sensor = 1 ORDER BY id DESC LIMIT $limit ) sub ORDER BY id ASC";
+		$temp = $this->db->query($sql);
+		$res = $temp->result();
+
+		$sql =  "SELECT * FROM ( SELECT * FROM reg_sensor WHERE id_sensor = 2 ORDER BY id DESC LIMIT $limit ) sub ORDER BY id ASC";
+		$hum = $this->db->query($sql);
+		$res2 = $hum->result();
+		
+	
+		return array(
+			'tem' => $res,
+			'hum' => $res2
+		) ;
+	}
+
 	public function getLast()
 	{
 		$this->db->select(array('valor', 'fecha', 'id_sensor'));

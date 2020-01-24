@@ -59,4 +59,33 @@ class Sensor extends CI_Controller
 		
 		$this->output->set_status_header($status);
 	}
+
+	public function getData($limit){
+		$data = $this->sensor_model->getlimitData($limit);
+		$sensores['temperatura'] = array();
+		$sensores['humedad'] = array();
+		foreach ($data['tem'] as $row) {
+			$value = (float)$row->valor;
+			$timestamp = $row->fecha;
+			if ($row->id_sensor == 1) {
+				array_push($sensores['temperatura'], array(
+					$timestamp,
+					$value
+				));
+			}
+		}
+
+		foreach ($data['hum'] as $row) {
+			$value = (float)$row->valor;
+			$timestamp = $row->fecha;
+
+			if ($row->id_sensor == 2) {
+				array_push($sensores['humedad'], array(
+					$timestamp,
+					$value
+				));
+			}
+		}
+		echo json_encode($sensores);
+	}
 }

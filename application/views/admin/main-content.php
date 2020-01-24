@@ -31,16 +31,13 @@
 						</div>
 						<!-- Gaugue de sensor temperatura -->
 						<div class="x_title">
-							<h2>Registro de datos</h2>
+							<h2>Temperatura</h2>
 							<div class="clearfix"></div>
 						</div>
 						<div class="row">
 							<div class="col-md-6 col-sm-6">
 								<div class="x_panel tile ">
-									<div class="x_title">
-										<h2>Temperatura</h2>
-										<div class="clearfix"></div>
-									</div>
+
 									<div class="x_content">
 										<div id="temp-gauge"></div>
 									</div>
@@ -48,10 +45,7 @@
 							</div>
 							<div class="col-md-6 col-sm-6">
 								<div class="x_panel tilde">
-									<div class="x_title">
-										<h2>Registro de valores</h2>
-										<div class="clearfix"></div>
-									</div>
+
 									<div class="x_content">
 										<!-- Tabla de registros -->
 										<table id="temp-table" class="table">
@@ -69,14 +63,13 @@
 							</div>
 						</div>
 						<!-- Gaugue de sensor humedad -->
-
+						<div class="x_title">
+							<h2>Humedad</h2>
+							<div class="clearfix"></div>
+						</div>
 						<div class="row">
 							<div class="col-md-6 col-sm-6">
 								<div class="x_panel tilde">
-									<div class="x_title">
-										<h2>Registro de valores</h2>
-										<div class="clearfix"></div>
-									</div>
 									<div class="x_content">
 										<!-- Tabla de registros -->
 										<table id="hum-table" class="table">
@@ -94,10 +87,6 @@
 							</div>
 							<div class="col-md-6 col-sm-6">
 								<div class="x_panel tile ">
-									<div class="x_title">
-										<h2>Humedad</h2>
-										<div class="clearfix"></div>
-									</div>
 									<div class="x_content">
 										<div id="hum-gauge"></div>
 									</div>

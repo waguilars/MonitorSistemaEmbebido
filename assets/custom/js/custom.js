@@ -10,7 +10,7 @@ const timeOffSet = new Date().getTimezoneOffset();
 
 $(document).ready(function() {
 	/* Grafico de temperatura y humedad */
-	$.getJSON("sensor", function(json) {
+	$.getJSON("sensor/getdata/20", function(json) {
 		//console.log(json.temperatura);
 		for (let i = 0; i < json.temperatura.length; i++) {
 			json.temperatura[i][0] = getTimestamp(json.temperatura[i][0]);
@@ -189,10 +189,6 @@ let chartOptions = {
 		pointFormat: "{point.x:%Y-%m-%d %H:%M:%S}<br/>{point.y:.2f}"
 	},
 
-	legend: {
-		enabled: false
-	},
-
 	exporting: {
 		enabled: false
 	},
@@ -200,10 +196,16 @@ let chartOptions = {
 	series: [
 		{
 			name: "Temperatura",
+			marker:{
+				symbol: 'square'
+			},
 			data: []
 		},
 		{
 			name: "Humedad",
+			marker:{
+				symbol: 'diamond'
+			},
 			data: []
 		}
 	]

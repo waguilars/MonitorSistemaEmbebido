@@ -50,8 +50,9 @@ class Export extends CI_Controller
 
 	public function pdf()
 	{
-		$temp_data = $this->sensor_model->getData(1);
-		$hum_data = $this->sensor_model->getData(2);
+		$temp_data = $this->sensor_model->getlastData(1, 100);
+		$hum_data = $this->sensor_model->getlastData(2, 100);
+
 
 		$data = array(
 			'temp' => $temp_data,
